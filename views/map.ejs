@@ -1,0 +1,168 @@
+<%- include("_header") -%>
+
+<!-- CSS -->
+<link href="https://fonts.googleapis.com/css?family=Bitter|Montserrat&display=swap" rel="stylesheet">
+<link href="css/reset.css" rel="stylesheet">
+<link href="css/main.css" rel="stylesheet">
+	
+<!-- LIBRAIRIES JAVASCRIPT D3 & JQUERY -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script src="https://d3js.org/d3-geo-projection.v4.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/holtzy/D3-graph-gallery@master/LIB/sankey.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/alasql@1.7"></script>
+
+
+
+
+
+
+
+
+		<!-- CONTENU -->
+		<article>
+			<section>
+
+
+				<div class="carte" id="carte1"></div>
+
+				<div class="loader hidden" id = "loader">Loading...</div>
+
+                <div class = "info" id = "panel">
+                    <div id = "titre">  Flux domicile-travail à Seattle</div>
+                    <br>
+                    <div id = "listeVilles">
+                            
+                        <label for="ville-select">Choisir une ville :</label>
+
+                        <select name="villes" id="ville-select" autocomplete="off">
+                            <option selected="selected" value="Seattle">Seattle</option>
+                            <option value="SanFrancisco">San Francisco</option>
+                            <option value="LosAngeles">Los Angeles</option>
+                            <option value="Houston">Houston</option>
+                        </select>
+                    </div>
+					<br>
+					<div>
+						<input type="checkbox" id="visiblenodes" name="visiblenodes" autocomplete="off">
+						<label for="visiblenodes">Cacher les nodes</label>
+					  </div>
+					<br>
+					<div>
+						<label for="tailleflux" id="label_tailleflux">Taille des flux (valeur * 0.0003)</label>
+						<br>
+						<input type="range" id="tailleflux" name="tailleflux"
+								min=0 max=0.005 value=0.0003 step=0.00001 autocomplete="off">
+							
+					</div>
+					<br>
+					<button id="zoombtn">
+						<b>DEZOOM</b>
+					</button>
+
+					<br>
+					<br>
+					<h3>Options :</h3>
+					<br>
+					
+					<form action="/somewhere" method="post"></form>
+
+					<div id = "listeRevenus">
+                            
+                        <label for="flux-select">Flux à représenter :</label>
+						<br>
+
+                        <select name="flux" id="flux-select" autocomplete="off">
+                            <option selected="selected" value="all">Tous les flux</option>
+                            <option value="low">Revenus inférieurs à 1250$ par mois</option>
+                            <option value="mid">Revenus entre 1250$ et 3333$ par mois</option>
+                            <option value="high">Revenus supérieurs à 3333$ par mois</option>
+                        </select>
+                    </div>
+					<br>
+					<div>
+						<label for="threshold" id="label_threshold">Nombre minimum de personnes = 200</label>
+						<br>
+						<input type="range" id="threshold" name="threshold"
+								min=0 max=2000 value=200 step=50 autocomplete="off">
+							
+					</div>
+					<!-- <div id = "toggle">
+						<div>
+							<input type="radio" id="flows_in" name="flows" value="flows_in"
+									checked autocomplete="off"> 
+							<label for="flows_in">Tract sélectionné = lieu de travail</label>
+						</div>
+						  
+						<div>
+							<input type="radio" id="flows_out" name="flows" value="flows_out" autocomplete="off">
+							<label for="flows_out">Tract sélectionné = lieu de résidence</label>
+						</div>
+					</div> -->
+					<br>
+					
+
+						
+						<label for="nbK">K-means =</label>
+						<input type="number" id="nbK" name="nbK"
+							min="1" max="1000" value = 300>
+						<br>
+						<br>
+						<br>
+
+						
+						<div id = "submitpanel">
+						<center><button id="SubmitBtn">
+							<b>SUBMIT</b>
+						</button></center>
+						</form>
+						
+						
+					</div>
+                </div>
+				
+				<div class = "bottom">
+					<div class = "padding" id="darkmode">
+						<a id = "link" href = "">Télécharger la carte</a>
+					</label>
+				    </div>
+				    <br>
+				    <div class="padding" id="source">Sources : LEHD Origin-Destination Employment Statistics (LODES), 2019</div>
+				</div>
+
+				<div id = "my_dataviz"></div>
+
+				</section>
+			</article>
+
+            <!-- DONNEES (GEOJSON, WGS84) -->    
+    
+	<script src="js/geojson_Seattle.js" type="text/javascript"></script>
+    <script src="js/geojson_SanFrancisco.js" type="text/javascript"></script>
+    <script src="js/geojson_LosAngeles.js" type="text/javascript"></script>
+    <script src="js/geojson_Houston.js" type="text/javascript"></script>
+
+	<script src="js/geojson_SeattleMG.js" type="text/javascript"></script>
+    <script src="js/geojson_SanFranciscoMG.js" type="text/javascript"></script>
+    <script src="js/geojson_LosAngelesMG.js" type="text/javascript"></script>
+    <script src="js/geojson_HoustonMG.js" type="text/javascript"></script>
+
+    <script src="js/geojson_Washington.js" type="text/javascript"></script>
+    <script src="js/geojson_California.js" type="text/javascript"></script>
+    <script src="js/geojson_Texas.js" type="text/javascript"></script>
+
+<!-- 	<script src="js/data_income.js" type="text/javascript"></script>-->	
+<!-- PROGRAMME JAVASCRIPT -->
+	<script src="js/map2.js" type="text/javascript"></script>
+<!-- 	<script src="js/stream.js" type="text/javascript"></script>
+	<script src="js/sankey.js" type="text/javascript"></script>  -->
+ 		<script src="js/testsnodes.js" type="text/javascript"></script> 
+
+
+
+
+<%- include("_footer") -%>
